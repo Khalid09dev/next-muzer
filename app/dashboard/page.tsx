@@ -16,6 +16,26 @@ const initialQueue = [
 { id: 3, title: "Darude - Sandstorm", votes: 1, videoId: "y6120QOlsfU" },
 ]
 
+const REFRESH_INTERVAL_MS = 10 * 1000;
+
+async function refreshStreams() {
+    try {
+        const res = await fetch(`/api/streams/my`, {
+            credentials: "include",
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch streams");
+        }
+
+        const data = await res.json();
+        console.log("Refreshed streams", data); // Handle or update streams here
+    } catch (error) {
+        console.error("Error refreshing streams:", error);
+    }
+}
+
+
 export default function Dashboard() {
 const [queue, setQueue] = useState(initialQueue)
 const [currentVideo, setCurrentVideo] = useState(queue[0])
@@ -25,6 +45,15 @@ const [previewVideo, setPreviewVideo] = useState(null)
 useEffect(() => {
     // Sort queue by votes whenever it changes
     setQueue(prevQueue => [...prevQueue].sort((a, b) => b.votes - a.votes))
+}, [])
+
+useEffect(() => {
+    refreshStreams();
+    const interval = setInterval(() => {
+
+    }, REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(interval);
 }, [])
 
 const handleSubmit = async (e) => {
