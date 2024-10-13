@@ -1,18 +1,19 @@
 "use client"
 
-import { signIn, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
+import { Button } from "@/components/ui/button"
 
 export function Appbar() {
     const session = useSession();
 
     return (
-        <div>
-            <div className="flex justify-between">
-                <div>Muzi</div>
-                <div>
-                    {session.data?.user && <button className="m-2 p-2 bg-blue-400" onClick={() => signIn()}>SignOut</button>}
-                    {!session.data?.user && <button className="m-2 p-2 bg-blue-400" onClick={() => signIn()}>Signin</button>}
-                </div>
+        <div className="flex justify-between items-center mx-5 py-3">
+            <div className="text-lg font-bold flex flex-col justify-center text-white">
+                Muzer
+            </div>
+            <div>
+                {session.data?.user && <Button className="bg-purple-600 hover:bg-purple-700 text-white transition-colors" onClick={() => signOut()}>SignOut</Button>}
+                {!session.data?.user && <Button className="bg-purple-600 hover:bg-purple-700 text-white transition-colors" onClick={() => signIn()}>Signin</Button>}
             </div>
         </div>
     )
